@@ -7,19 +7,20 @@ const AddEmployee = () => {
     name: "",
     email: "",
     password: "",
-    salary: "",
+    salary: null,
     address: "",
-    category_id: "",
-    image: "",
+    category_id: 1,
+    // image: "",
   });
   const [category, setCategory] = useState([]);
   const navigate = useNavigate()
-
+  //const cate = [{"name": "FSD"}, {"name": "SDE"}];
   useEffect(() => {
     axios
       .get("http://localhost:8081/auth/department")
       .then((result) => {
         if (result.data.Status) {
+          console.log(result.data.Result);
           setCategory(result.data.Result);
         } else {
           alert(result.data.Error);
@@ -30,24 +31,24 @@ const AddEmployee = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const formData = new FormData();
-    formData.append('name', employee.name);
-    formData.append('email', employee.email);
-    formData.append('password', employee.password);
-    formData.append('address', employee.address);
-    formData.append('salary', employee.salary);
-    formData.append('image', employee.image);
-    formData.append('category_id', employee.category_id);
+    const employeeData = {
+      name: employee.name,
+      email: employee.email,
+      password: employee.password,
+      address: employee.address,
+      salary: employee.salary,
+      category_id: employee.category_id,
+    };
 
-    axios.post('http://localhost:8081/auth/add_employee', formData)
+    axios.post('http://localhost:8081/auth/add_employee', employeeData)
     .then(result => {
-        if(result.data.Status) {
-            navigate('/dashboard/employee')
-        } else {
-            alert(result.data.Error)
-        }
+      if(result.data.Status) {
+        console.log(result.data.message);
+        navigate('/dashboard/employee');
+      } else {
+        alert(result.data.Error || "An error occurred"); // Display the error message or a default message
+      }
     })
-    .catch(err => console.log(err))
   }
 
   return (
@@ -101,7 +102,7 @@ const AddEmployee = () => {
               Salary
             </label>
             <input
-              type="text"
+              type="number"
               className="form-control rounded-0"
               id="inputSalary"
               placeholder="Enter Salary"
@@ -127,17 +128,29 @@ const AddEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="category" className="form-label">
+            <label htmlFor="category" className="form-label">
               Category
             </label>
-            <select name="category" id="category" className="form-select"
-                onChange={(e) => setEmployee({...employee, category_id: e.target.value})}>
-              {category.map((c) => {
-                return <option value={c.id}>{c.name}</option>;
-              })}
+            <select
+              name="category"
+              id="category"
+              className="form-select rounded-0"
+              onChange={(e) => setEmployee({ ...employee, category_id: e.target.value })}
+            >
+              <option value="" disabled selected>
+                Select Category
+              </option>
+              {category.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+                // <option>
+                //   {c.name}
+                // </option>
+              ))}
             </select>
           </div>
-          <div className="col-12 mb-3">
+          {/* <div className="col-12 mb-3">
             <label className="form-label" for="inputGroupFile01">
               Select Image
             </label>
@@ -148,7 +161,7 @@ const AddEmployee = () => {
               name="image"
               onChange={(e) => setEmployee({...employee, image: e.target.files[0]})}
             />
-          </div>
+          </div> */}
           <div className="col-12">
             <button type="submit" className="btn btn-primary w-100">
               Add Employee

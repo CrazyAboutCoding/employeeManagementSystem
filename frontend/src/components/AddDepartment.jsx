@@ -11,12 +11,12 @@ const Adddepartment = () => {
         axios.post('http://localhost:8081/auth/add_department', {department})
         .then(result => {
             if(result.data.Status) {
-                navigate('/dashboard/department')
+              console.log(result.data.message);
+              navigate('/dashboard/department');
             } else {
-                alert(result.data.Error)
+              alert(result.data.Error || "An error occurred"); // Display the error message or a default message
             }
-        })
-        .catch(err => console.log(err))
+          })
     }
   return (
     <div className='d-flex justify-content-center align-items-center h-75'>

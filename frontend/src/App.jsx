@@ -19,23 +19,26 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Start />}></Route>
         <Route path="/adminlogin" element={<Login />}></Route>
-        <Route path="/home" element={<Home />}></Route>
+        
         <Route path="/employee_login" element={<EmployeeLogin />}></Route>
         <Route path="/employee_detail/:id" element={<EmployeeDetail />}></Route>
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
+            
               <Dashboard />
-            </PrivateRoute>
+              
+            
           }
         >
+          <Route path="" element={<Home />}></Route>
           <Route path="/dashboard/employee" element={<Employee />}></Route>
-          <Route path="/dashboard/category" element={<Department />}></Route>
+          <Route path="/dashboard/department" element={<Department />}></Route>
           <Route path="/dashboard/profile" element={<Profile />}></Route>
           <Route
-            path="/dashboard/add_category"
+            path="/dashboard/add_department"
             element={<Adddepartment />}
           ></Route>
           <Route
@@ -47,7 +50,6 @@ function App() {
             element={<EditEmployee />}
           ></Route>
         </Route>
-        <Route path="/" element={<Start />}></Route>
       </Routes>
     </BrowserRouter>
   );

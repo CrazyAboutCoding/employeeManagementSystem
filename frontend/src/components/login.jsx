@@ -14,17 +14,20 @@ function Login() {
     const [error, setError] = useState('')
 
     const handleSubmit = async(event) => {
-        event.preventDefault();
-        await axios.post('http://localhost:8081/adminlogin', values)
-        .then(res => {
-            console
-            if(res.data.loginStatus === true) {
-                navigate('/home');
-            } else {
-                setError(res.data.Error);
-            }
-        })
-        .catch(err => console.log(err));
+        
+            event.preventDefault();
+            await axios.post('http://localhost:8081/adminlogin', values)
+            .then(res => {
+                // console.log("login success");
+                if(res.data.loginStatus === true) {
+                    console.log("dashboard route");
+                    navigate('/dashboard');
+                } else {
+                    setError(res.data.Error);
+                }
+            })
+            .catch(err => console.log(err));
+        
     }
 
     return (

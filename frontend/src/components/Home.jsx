@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Employee from './Employee'
+import Dashboard from './Dashboard'
 
 const Home = () => {
   const [adminTotal, setAdminTotal] = useState(0)
@@ -44,14 +45,15 @@ const Home = () => {
     })
   }
 
-  // const onDelete = () => {
-  //   axios.delete('http://localhost:8081/auth/delete_admin'+id)
-  //   .then(result => {
-  //     if(result.data.Status) {
-  //       console.log(result.data.Status);
-  //     }
-  //   })
-  // }
+  const onDelete = (id) => {
+    console.log("delete function");
+    axios.delete(`http://localhost:8081/auth/delete_admin/${id}`)
+    .then(result => {
+      if(result.data.Status) {
+        console.log(result.data.Status);
+      }
+    })
+  }
 
 //   const salaryCount = () => {
 //     axios.get('http://localhost:8081/auth/salary_count')
@@ -118,8 +120,7 @@ const Home = () => {
                     Edit
                   </button>
                   <button key={a.id}
-                    className="btn btn-warning btn-sm" >
-                    onClick={onDelete}
+                    className="btn btn-warning btn-sm" onClick={() => onDelete(a.id)}>
                     Delete
                   </button>
                   </td>

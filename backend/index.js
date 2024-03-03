@@ -11,7 +11,11 @@ const app = express()
 //     methods: ['GET', 'POST', 'PUT', "DELETE"],
 //     credentials: true
 // }))
-app.use(cors())
+app.use(cors({ 
+    origin: 'http://localhost:5173', // Specify your client's origin
+    credentials: true // Allow credentials (cookies, authorization headers, etc.)
+}));
+
 app.use(express.json())
 app.use(cookieParser())
 app.use('/auth', adminRouter)

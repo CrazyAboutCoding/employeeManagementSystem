@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/adminlogin", (req, res) => {
   const sql = "SELECT * from admin Where email = ? and password = ?";
-  console.log("Hello");
+  //console.log("Hello");
   con.query(sql, [req.body.email, req.body.password], (err, result) => {
     if (err) return res.json({ loginStatus: false, Error: "Query error" });
     if (result.length > 0) {
@@ -27,19 +27,21 @@ router.post("/adminlogin", (req, res) => {
   });
 });
 
-router.get('/category', (req, res) => {
-    const sql = "SELECT * FROM category";
+router.get('/department', (req, res) => {
+    const sql = "SELECT * FROM department";
     con.query(sql, (err, result) => {
         if(err) return res.json({Status: false, Error: "Query Error"})
         return res.json({Status: true, Result: result})
     })
 })
 
-router.post('/add_category', (req, res) => {
-    const sql = "INSERT INTO category (`name`) VALUES (?)"
-    con.query(sql, [req.body.category], (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
-        return res.json({Status: true})
+router.post('/add_department', (req, res) => {
+    const departmentName = req.body.department;
+    console.log(departmentName);
+    const sql = "INSERT INTO department (`name`) VALUES (?)"
+    con.query(sql, [departmentName], (err, result) => {
+        if(err) return res.json({Status: false, Error: "An error occurred in adding category"})
+        return res.json({Status: true, message : "category added successfully"})
     })
 })
 
@@ -57,26 +59,27 @@ const upload = multer({
 })
 // end imag eupload 
 
-router.post('/add_employee',upload.single('image'), (req, res) => {
+router.post('/add_employee', (req, res) => {
     const sql = `INSERT INTO employee 
-    (name,email,password, address, salary,image, category_id) 
+    (name,email,password, address, salary, deptid) 
     VALUES (?)`;
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
+    // bcrypt.hash(req.body.password, 10, (err, hash) => {
+    //     if(err) return res.json({Status: false, Error: "Query Error"})
         const values = [
             req.body.name,
             req.body.email,
-            hash,
+            req.body.password,
             req.body.address,
             req.body.salary, 
-            req.file.filename,
+            // req.file.filename,
             req.body.category_id
         ]
+        console.log(values);
         con.query(sql, [values], (err, result) => {
-            if(err) return res.json({Status: false, Error: err})
-            return res.json({Status: true})
+            if(err) return res.json({Status: false, Error: "An error occurred during employee addition"})
+            return res.json({Status: true, message : "Employee added successfully"})
         })
-    })
+    // })
 })
 
 router.get('/employee', (req, res) => {
@@ -99,7 +102,7 @@ router.get('/employee/:id', (req, res) => {
 router.put('/edit_employee/:id', (req, res) => {
     const id = req.params.id;
     const sql = `UPDATE employee 
-        set name = ?, email = ?, salary = ?, address = ?, category_id = ? 
+        set name = ?, email = ?, salary = ?, address = ?, deptid = ? 
         Where id = ?`
     const values = [
         req.body.name,
