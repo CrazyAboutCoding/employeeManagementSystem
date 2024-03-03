@@ -10,6 +10,8 @@ const EditEmployee = () => {
         salary: "",
         address: "",
         department_id: "",
+        dateOfBirth: "",
+        age: 0,
       });
       const [department, setdepartment] = useState([])
       const navigate = useNavigate()
@@ -33,12 +35,37 @@ const EditEmployee = () => {
                 address: result.data.Result[0].address,
                 salary: result.data.Result[0].salary,
                 department_id: result.data.Result[0].department_id,
+                dateOfBirth: result.data.Result[0].dateOfBirth || "",
+                age: result.data.Result[0].age || 0,
             })
         }).catch(err => console.log(err))
     }, [])
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+
+        if (!employee.dateOfBirth) {
+          alert("Date of Birth cannot be empty");
+          return;
+        }
+    
+        const dob = new Date(employee.dateOfBirth);
+        const currentDate = new Date();
+        
+        if (dob > currentDate) {
+          alert("Date of Birth cannot be in the future");
+          return;
+        }
+    
+        const ageDiffMs = currentDate - dob.getTime();
+        const ageDate = new Date(ageDiffMs);
+        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        
+        if (age < 18) {
+          alert("Employee must be at least 19 years old");
+          return;
+        }
+
         axios.put('http://localhost:8081/auth/edit_employee/'+id, employee)
         .then(result => {
             if(result.data.Status) {
@@ -85,6 +112,20 @@ const EditEmployee = () => {
               }
             />
           </div>
+          <div className="col-12">
+            <label for="inputDateOfBirth" className="form-label">
+              Date of Birth
+            </label>
+            <input
+              type="date"
+              className="form-control rounded-0"
+              id="inputDateOfBirth"
+              onChange={(e) =>
+                setEmployee({ ...employee, dateOfBirth: e.target.value })
+              }
+              value={employee.dateOfBirth}
+            />
+          </div>
           <div className='col-12'>
             <label for="inputSalary" className="form-label">
               Salary
@@ -119,7 +160,7 @@ const EditEmployee = () => {
           </div>
           <div className="col-12">
             <label for="department" className="form-label">
-              department
+              Department
             </label>
             <select name="department" id="department" className="form-select"
                 onChange={(e) => setEmployee({...employee, department_id: e.target.value})}>

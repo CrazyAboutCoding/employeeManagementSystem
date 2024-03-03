@@ -61,7 +61,7 @@ const upload = multer({
 
 router.post('/add_employee', (req, res) => {
     const sql = `INSERT INTO employee 
-    (name,email,password, address, salary, deptid) 
+    (name,email,password, department, salary, address,  deptid, dob) 
     VALUES (?)`;
     // bcrypt.hash(req.body.password, 10, (err, hash) => {
     //     if(err) return res.json({Status: false, Error: "Query Error"})
@@ -69,10 +69,12 @@ router.post('/add_employee', (req, res) => {
             req.body.name,
             req.body.email,
             req.body.password,
+            req.body.department,
+            req.body.salary,
             req.body.address,
-            req.body.salary, 
             // req.file.filename,
-            req.body.category_id
+            req.body.category_id,
+            req.body.dob
         ]
         console.log(values);
         con.query(sql, [values], (err, result) => {
@@ -102,14 +104,16 @@ router.get('/employee/:id', (req, res) => {
 router.put('/edit_employee/:id', (req, res) => {
     const id = req.params.id;
     const sql = `UPDATE employee 
-        set name = ?, email = ?, salary = ?, address = ?, deptid = ? 
+        set name = ?, email = ?, department = ?, salary = ?, address = ?, deptid = ?, dob = ? 
         Where id = ?`
     const values = [
         req.body.name,
         req.body.email,
+        req.body.department,
         req.body.salary,
         req.body.address,
-        req.body.category_id
+        req.body.department_id,
+        req.body.dateOfBirth
     ]
     con.query(sql,[...values, id], (err, result) => {
         if(err) return res.json({Status: false, Error: "Query Error"+err})

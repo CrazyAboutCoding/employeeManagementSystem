@@ -7,6 +7,8 @@ const AddEmployee = () => {
     name: "",
     email: "",
     password: "",
+    dateOfBirth: "",
+    age: 0,
     salary: null,
     address: "",
     category_id: 1,
@@ -31,14 +33,44 @@ const AddEmployee = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
     const employeeData = {
-      name: employee.name,
-      email: employee.email,
-      password: employee.password,
-      address: employee.address,
-      salary: employee.salary,
-      category_id: employee.category_id,
+      Name: employee.name,
+      Email: employee.email,
+      Password: employee.password,
+      dob: employee.dateOfBirth,
+      Address: employee.address,
+      Salary: employee.salary,
+      Category_id: employee.category_id,
     };
+    console.log(employeeData);
+    for (const key in employeeData) {
+      if (!employeeData[key]) {
+          alert(`${key} cannot be empty`);
+          return;
+      }
+    }
+
+    if (!employee.dateOfBirth) {
+      alert('Date of Birth cannot be empty');
+      return;
+    }
+
+    const dob = new Date(employee.dateOfBirth);
+    const currentDate = new Date();
+    const ageDiffMs = Date.now() - dob.getTime();
+    const ageDate = new Date(ageDiffMs);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+    if (dob > currentDate) {
+      alert('Date of Birth cannot be in the future');
+      return;
+    }
+
+    if (age < 18) {
+      alert('Employee must be at least 19 years old');
+      return;
+    }
 
     axios.post('http://localhost:8081/auth/add_employee', employeeData)
     .then(result => {
@@ -98,6 +130,17 @@ const AddEmployee = () => {
                 setEmployee({ ...employee, password: e.target.value })
               }
             />
+            <div className="col-12">
+              <label for="inputDateOfBirth" className="form-label">
+                Date of Birth
+              </label>
+              <input
+                type="date"
+                className="form-control rounded-0"
+                id="inputDateOfBirth"
+                onChange={(e) => setEmployee({ ...employee, dateOfBirth: e.target.value })}
+              />
+            </div>
             <label for="inputSalary" className="form-label">
               Salary
             </label>
@@ -129,7 +172,7 @@ const AddEmployee = () => {
           </div>
           <div className="col-12">
             <label htmlFor="category" className="form-label">
-              Category
+              Department
             </label>
             <select
               name="category"
@@ -138,7 +181,7 @@ const AddEmployee = () => {
               onChange={(e) => setEmployee({ ...employee, category_id: e.target.value })}
             >
               <option value="" disabled selected>
-                Select Category
+                Select Departement
               </option>
               {category.map((c) => (
                 <option key={c.id} value={c.id}>
