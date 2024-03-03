@@ -44,14 +44,14 @@ const Home = () => {
     })
   }
 
-  const onDelete = () => {
-    axios.delete('http://localhost:8081/auth/delete_admin'+id)
-    .then(result => {
-      if(result.data.Status) {
-        console.log(result.data.Status);
-      }
-    })
-  }
+  // const onDelete = () => {
+  //   axios.delete('http://localhost:8081/auth/delete_admin'+id)
+  //   .then(result => {
+  //     if(result.data.Status) {
+  //       console.log(result.data.Status);
+  //     }
+  //   })
+  // }
 
 //   const salaryCount = () => {
 //     axios.get('http://localhost:8081/auth/salary_count')
