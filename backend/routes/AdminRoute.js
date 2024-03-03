@@ -96,6 +96,7 @@ router.get('/employee/:id', (req, res) => {
     const id = req.params.id;
     const sql = "SELECT * FROM employee WHERE id = ?";
     con.query(sql,[id], (err, result) => {
+        console.log(result);
         if(err) return res.json({Status: false, Error: "Query Error"})
         return res.json({Status: true, Result: result})
     })
@@ -115,6 +116,7 @@ router.put('/edit_employee/:id', (req, res) => {
         req.body.department_id,
         req.body.dateOfBirth
     ]
+    console.log(values);
     con.query(sql,[...values, id], (err, result) => {
         if(err) return res.json({Status: false, Error: "Query Error"+err})
         return res.json({Status: true, Result: result})

@@ -64,7 +64,7 @@ const Employee = () => {
                 <td>{e.address}</td>
                 <td>{e.salary}</td>
                 <td>{e.department}</td>
-                <td>{e.dob}</td>
+                <td>{new Date(e.dob).toLocaleDateString()}</td>
                 <td>
                   <Link
                     to={`/dashboard/edit_employee/` + e.id}

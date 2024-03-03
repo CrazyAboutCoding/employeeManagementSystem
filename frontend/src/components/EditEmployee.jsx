@@ -9,7 +9,8 @@ const EditEmployee = () => {
         email: "",
         salary: "",
         address: "",
-        department_id: "",
+        department: "",
+        category_id: "",
         dateOfBirth: "",
         age: 0,
       });
@@ -34,10 +35,12 @@ const EditEmployee = () => {
                 email: result.data.Result[0].email,
                 address: result.data.Result[0].address,
                 salary: result.data.Result[0].salary,
-                department_id: result.data.Result[0].department_id,
+                department: result.data.Result[0].department,
+                category_id: result.data.Result[0].category_id,
                 dateOfBirth: result.data.Result[0].dateOfBirth || "",
                 age: result.data.Result[0].age || 0,
             })
+            console.log(result);
         }).catch(err => console.log(err))
     }, [])
 
@@ -162,11 +165,34 @@ const EditEmployee = () => {
             <label for="department" className="form-label">
               Department
             </label>
-            <select name="department" id="department" className="form-select"
+            {/* <select name="department" id="department" className="form-select"
                 onChange={(e) => setEmployee({...employee, department_id: e.target.value})}>
               {department.map((c) => {
                 return <option value={c.id}>{c.name}</option>;
               })}
+            </select> */}
+
+            <select
+              name="category"
+              id="category"
+              className="form-select rounded-0"
+              onChange={(e) => {
+                const selectedDepartment = department.find((c) => c.id === parseInt(e.target.value));
+                setEmployee({
+                  ...employee,
+                  category_id: e.target.value,
+                  department: selectedDepartment ? selectedDepartment.name : '',
+                });
+              }}
+            >
+              <option value="" disabled selected>
+                Select Departement
+              </option>
+              {department.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
             </select>
           </div>
           

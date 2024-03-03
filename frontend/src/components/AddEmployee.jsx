@@ -11,6 +11,7 @@ const AddEmployee = () => {
     age: 0,
     salary: null,
     address: "",
+    department: "",
     category_id: 1,
     // image: "",
   });
@@ -35,13 +36,14 @@ const AddEmployee = () => {
     e.preventDefault()
 
     const employeeData = {
-      Name: employee.name,
-      Email: employee.email,
-      Password: employee.password,
+      name: employee.name,
+      email: employee.email,
+      password: employee.password,
       dob: employee.dateOfBirth,
-      Address: employee.address,
-      Salary: employee.salary,
-      Category_id: employee.category_id,
+      address: employee.address,
+      salary: employee.salary,
+      category_id: employee.category_id,
+      department: employee.department,
     };
     console.log(employeeData);
     for (const key in employeeData) {
@@ -178,7 +180,14 @@ const AddEmployee = () => {
               name="category"
               id="category"
               className="form-select rounded-0"
-              onChange={(e) => setEmployee({ ...employee, category_id: e.target.value })}
+              onChange={(e) => {
+                const selectedDepartment = category.find((c) => c.id === parseInt(e.target.value));
+                setEmployee({
+                  ...employee,
+                  category_id: e.target.value,
+                  department: selectedDepartment ? selectedDepartment.name : '',
+                });
+              }}
             >
               <option value="" disabled selected>
                 Select Departement
@@ -187,9 +196,6 @@ const AddEmployee = () => {
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
-                // <option>
-                //   {c.name}
-                // </option>
               ))}
             </select>
           </div>
